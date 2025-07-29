@@ -1,0 +1,29 @@
+{
+  "name": "copiadelproyectobisoft04",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lquirose/CopiadelProyectoBISOFT04.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lquirose/CopiadelProyectoBISOFT04/issues"
+  },
+  "homepage": "https://github.com/Lquirose/CopiadelProyectoBISOFT04#readme",
+  "description": "",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "mongoose": "^8.16.5",
+    "morgan": "^1.10.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
