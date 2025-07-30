@@ -1,6 +1,7 @@
 //Utilizar express
 const express = require('express');
-
+const conectarDB = require('../modelos/conexion.js');
+conectarDB();
 const app = express();
 
 const path = require('path');
@@ -96,13 +97,27 @@ app.get('/RegistroEmprendimiento',(req,res)=>{
 
 //***Metodo POST***
 //Transporte
+const importTransportModel = require('../modelos/transporte.js')
+
 app.post('/addRoutesInformation',(req,res)=>{
-    console.log(req.body.routeName);
-    console.log(req.body.transportTime);
-    console.log(req.body.transportDestination);
-    console.log(req.body.transportFrecuency);
-    console.log(req.body.transportFee);
-    console.log(req.body.tripDuration);
+    //Obtener la información que escribe el usuario
+    let transportData = new importTransportModel({
+        routeName: req.body.routeName,
+        transportTime: req.body.transportTime,
+        transportDestination: req.body.transportDestination,
+        transportFrecuency: req.body.transportFrecuency,
+        transportFee: req.body.transportFee,
+        tripDuration: req.body.tripDuration
+    })
+    //Almacenar los datos
+    transportData.save()
+    .then(()=>{
+        console.log("Ruta configurada")
+    })
+    .catch((err)=>{
+        console.log("Error al configurar la ruta", err)
+    })
+    //Renderizar
     res.redirect('/transporteadmin')
 })
 //Reportes
