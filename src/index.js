@@ -1,6 +1,7 @@
 //Utilizar express
 const express = require('express');
 const conectarDB = require('../modelos/conexion.js');
+
 conectarDB();
 const app = express();
 
@@ -27,6 +28,9 @@ app.listen(3000,()=>{
 })
 
 //***Rutas***
+
+//Declarar modelos
+const importTransportModel = require('../modelos/transporte.js')
 
 // views/General
 app.get('/',(req,res)=>{
@@ -63,9 +67,15 @@ app.get('/ReportesAdmin',(req,res)=>{
     res.render("Administradores/ReportesAdmin.html");
 })
 
-app.get('/transporteadmin',(req,res)=>{
-    res.render("Administradores/transporteadmin.html");
-})
+app.get('/transporteadmin', async (req, res) => {
+  try {
+    const rutasRegistradas = await importTransportModel.find();
+    res.render('Administradores/transporteadmin', { rutas: rutasRegistradas });
+  } catch (error) {
+    console.log("Error al cargar rutas:", error);
+    res.render('Administradores/transporteadmin', { rutas: [] });
+  }
+});
 
 //views/Usuarios
 
@@ -85,9 +95,19 @@ app.get('/publicaciones',(req,res)=>{
     res.render("Usuarios/publicaciones.html");
 })
 
-app.get('/transporte',(req,res)=>{
-    res.render("Usuarios/transporte.html");
-})
+app.get('/transporte', async (req, res) => {
+  try {
+    const rutasRegistradas = await importTransportModel.find();
+    res.render("Usuarios/transporte", { rutas: rutasRegistradas });
+  } catch (error) {
+    console.log("Error al cargar rutas:", error);
+    res.render("Usuarios/transporte", { rutas: [] });
+  }
+});
+
+
+
+
 
 //views/Emprendedores
 
@@ -95,9 +115,10 @@ app.get('/RegistroEmprendimiento',(req,res)=>{
     res.render("Emprendedores/RegistroEmprendimiento.html");
 })
 
+
 //***Metodo POST***
 //Transporte
-const importTransportModel = require('../modelos/transporte.js')
+
 
 app.post('/addRoutesInformation',(req,res)=>{
     //Obtener la información que escribe el usuario
@@ -120,6 +141,35 @@ app.post('/addRoutesInformation',(req,res)=>{
     //Renderizar
     res.redirect('/transporteadmin')
 })
+//Ruta post para actualizar rutas
+app.post('/updateRoute/:id', async (req, res) => {
+  try {
+    await importTransportModel.findByIdAndUpdate(req.params.id, {
+      routeName: req.body.routeName,
+      transportTime: req.body.transportTime,
+      transportDestination: req.body.transportDestination,
+      transportFrecuency: req.body.transportFrecuency,
+      transportFee: req.body.transportFee,
+      tripDuration: req.body.tripDuration
+    });
+    console.log("Ruta actualizada:", req.params.id);
+  } catch (err) {
+    console.log("Error al actualizar ruta:", err);
+  }
+  res.redirect('/transporteadmin');
+});
+//Para eliminar rutas
+app.post('/deleteRoute/:id', async (req, res) => {
+  try {
+    await importTransportModel.findByIdAndDelete(req.params.id);
+    console.log("Ruta eliminada:", req.params.id);
+  } catch (err) {
+    console.log("Error al eliminar ruta:", err);
+  }
+  res.redirect('/transporteadmin');
+});
+
+
 //Reportes
 app.post('/addReport',(req,res)=>{
     console.log(req.body.reportTitle);
