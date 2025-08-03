@@ -62,7 +62,7 @@
       <p>Llena el formulario a continuación:</p>
     </div>
 
-    <form action="/addBusiness" method="post" class="formulario-emprendimiento" id="form">
+    <form action="/addBusiness" method="post" class="formulario-emprendimiento" id="form" enctype="multipart/form-data">
       <div class="campo form-group">
         <label>Nombre del negocio</label>
         <input type="text" placeholder="Ingrese el nombre del negocio" id="businessName" name="businessName"/>
@@ -76,16 +76,21 @@
         
       </div>
 
-      <div class="campo form-group">
-        <label>Categoría</label>
+      <div class="form-group">
+        <label for="categoryInput">Categoría del emprendimiento</label>
+    
         <div class="categorias">
           <button type="button">Alimentos</button>
           <button type="button">Servicios</button>
+          <button type="button">Artesanías</button>
           <button type="button">Tecnología</button>
-          <button type="button">Arte</button>
-          <button type="button">Otros</button>
+          <button type="button">Educación</button>
         </div>
-      </div>
+
+    <!-- Campo oculto que se enviará al backend -->
+        <input type="hidden" name="category" id="categoryInput" required>
+  </div>
+
 
       <div class="campo form-group">
         <label>Teléfono de contacto</label>
@@ -107,13 +112,13 @@
 
       <div class="campo form-group">
         <label>Fecha de registro</label>
-        <input type="date" readonly id="loginDate" name="loginDate" />
+        <input type="date" readonly id="loginDate" />
         <small>Campo solo de lectura</small>
       </div>
 
       <div class="campo form-group">
-        <label>Sube el logo o imagen representativa</label>
-        <input type="file" accept=".jpg, .png" />
+        <label for="image">Sube el logo o imagen representativa</label>
+        <input type="file" id="image" name="image" accept=".jpg, .png" />
         <small>Formato JPG o PNG, máx. 5MB</small>
       </div>
 
@@ -143,5 +148,6 @@
   </div>
    </footer>
    <script src="js/formulario_script.js"></script>
+   <script src="js/categorybutton.js"></script>
 </body>
 </html>

@@ -121,6 +121,14 @@
   background-color: #e0e7ff;
 }
 
+
+.categorias button.seleccionado {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+
 .btn-enviar {
   background-color: #2563eb;
   color: white;

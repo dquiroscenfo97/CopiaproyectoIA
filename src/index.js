@@ -1,11 +1,12 @@
 //Utilizar express
 const express = require('express');
 const conectarDB = require('../modelos/conexion.js');
-
-conectarDB();
+const upload = require('../middlewares/uploadimage');
 const app = express();
 
 const path = require('path');
+
+conectarDB();
 
 app.set('views', path.join(__dirname,'views'));
 app.engine('html',require('ejs').renderFile);
@@ -31,6 +32,7 @@ app.listen(3000,()=>{
 
 //Declarar modelos
 const importTransportModel = require('../modelos/transporte.js')
+const importBusinessModel = require('../modelos/emprendimiento.js')
 
 // views/General
 app.get('/',(req,res)=>{
@@ -186,13 +188,45 @@ app.post('/LoginSite',(req,res)=>{
     res.redirect('/')
 })
 
-app.post('/addBusiness',(req,res)=>{
-    console.log(req.body.businessName);
-    console.log(req.body.businessDescription);
-    console.log(req.body.communityTelephone);
-    console.log(req.body.email);
-    console.log(req.body.businessLocation);
-    res.redirect('/RegistroEmprendimiento')
-})
+
+// Ruta POST para registrar emprendimiento
+app.post('/addBusiness', upload.single('image'), async (req, res) => {
+  try {
+    // Extraer campos del formulario
+    const {
+      businessName,
+      businessDescription,
+      businessTelephone,
+      email,
+      businessLocation
+    } = req.body;
+
+    // Generar fecha automáticamente en el backend
+    const loginDate = new Date();
+
+    // Procesar imagen si fue enviada
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+
+    // Crear nueva instancia del modelo
+    const newBusiness = new Business({
+      businessName,
+      businessDescription,
+      businessTelephone,
+      email,
+      businessLocation,
+      loginDate,
+      imagePath
+    });
+
+    // Guardar en MongoDB
+    await newBusiness.save();
+
+    // Respuesta exitosa
+    res.status(201).send('Emprendimiento registrado con éxito');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al registrar el emprendimiento');
+  }
+});
 
 
