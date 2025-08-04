@@ -21,6 +21,7 @@ app.use(bodyparser.urlencoded({extended:false}));//Formato tipo url encoded
 
 //Archivos estáticos --> Esto es para identificar que dentro de la carpeta public están los archivos que aportan forma a las views.
 app.use(express.static(path.join(__dirname,'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 
 //Encender el servidor
@@ -32,7 +33,7 @@ app.listen(3000,()=>{
 
 //Declarar modelos
 const importTransportModel = require('../modelos/transporte.js')
-const importBusinessModel = require('../modelos/emprendimiento.js')
+const Business = require('../modelos/emprendimiento.js')
 
 // views/General
 app.get('/',(req,res)=>{
@@ -112,10 +113,27 @@ app.get('/transporte', async (req, res) => {
 
 
 //views/Emprendedores
+app.get('/RegistroEmprendimiento', async (req, res) => {
+  try {
+    const emprendimientos = await Business.find({ aprobado: true });
 
-app.get('/RegistroEmprendimiento',(req,res)=>{
-    res.render("Emprendedores/RegistroEmprendimiento.html");
-})
+    // Capturar el parámetro de éxito si existe
+    const exito = req.query.exito === 'true';
+
+    // Pasar ambos datos a la vista
+    res.render('Emprendedores/RegistroEmprendimiento', {
+      emprendimientos,
+      exito
+    });
+
+  } catch (error) {
+    console.error("Error al cargar emprendimientos:", error);
+    res.render('Emprendedores/RegistroEmprendimiento', {
+      emprendimientos: [],
+      exito: false
+    });
+  }
+});
 
 
 //***Metodo POST***
@@ -192,37 +210,34 @@ app.post('/LoginSite',(req,res)=>{
 // Ruta POST para registrar emprendimiento
 app.post('/addBusiness', upload.single('image'), async (req, res) => {
   try {
-    // Extraer campos del formulario
     const {
       businessName,
       businessDescription,
       businessTelephone,
       email,
-      businessLocation
+      businessLocation,
+      category
     } = req.body;
 
-    // Generar fecha automáticamente en el backend
     const loginDate = new Date();
-
-    // Procesar imagen si fue enviada
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
 
-    // Crear nueva instancia del modelo
     const newBusiness = new Business({
       businessName,
       businessDescription,
       businessTelephone,
       email,
       businessLocation,
+      category,
       loginDate,
       imagePath
     });
 
-    // Guardar en MongoDB
     await newBusiness.save();
 
-    // Respuesta exitosa
-    res.status(201).send('Emprendimiento registrado con éxito');
+    // Redirigir al formulario con mensaje de éxito
+    res.redirect('/RegistroEmprendimiento?exito=true');
+
   } catch (error) {
     console.error(error);
     res.status(500).send('Error al registrar el emprendimiento');

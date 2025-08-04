@@ -11,7 +11,7 @@ const emprendimientoSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  categoria: {
+  category: {
     type: String,
     required: true,
     trim: true
@@ -35,9 +35,10 @@ const emprendimientoSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
-  imagen: {
+  imagePath: {
     type: String,
-    default: '/img/default.png'
+    default: '/img/default.png',
+    required: true
   },
   aprobado: {
     type: Boolean,
@@ -47,4 +48,4 @@ const emprendimientoSchema = new mongoose.Schema({
   timestamps: true
 });
 
-module.exports = mongoose.model('Emprendimiento', emprendimientoSchema);
+module.exports = mongoose.model('Business', emprendimientoSchema);

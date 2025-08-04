@@ -59,8 +59,17 @@
   <div class="registro-contenedor">
     <div class="registro-info">
       <h2>Registro de Emprendimiento</h2>
+
+     
+
       <p>Llena el formulario a continuación:</p>
     </div>
+
+     <% if (exito) { %>
+        <div class="mensaje-exito">
+          <p>✅ Tu emprendimiento fue enviado con éxito y está pendiente de aprobación.</p>
+        </div>
+      <% } %>
 
     <form action="/addBusiness" method="post" class="formulario-emprendimiento" id="form" enctype="multipart/form-data">
       <div class="campo form-group">
@@ -89,6 +98,7 @@
 
     <!-- Campo oculto que se enviará al backend -->
         <input type="hidden" name="category" id="categoryInput" required>
+        <p class="form-message-error">mensaje</p>
   </div>
 
 
@@ -112,7 +122,7 @@
 
       <div class="campo form-group">
         <label>Fecha de registro</label>
-        <input type="date" readonly id="loginDate" />
+        <input type="date" readonly id="loginDate" name="loginDate" />
         <small>Campo solo de lectura</small>
       </div>
 
@@ -122,8 +132,8 @@
         <small>Formato JPG o PNG, máx. 5MB</small>
       </div>
 
-      <div class="campo">
-        <button type="submit" class="btn-enviar" value="registrarEmprendimiento" "onclick = location.reload()">Enviar solicitud de registro</button>
+      <div class="campo form-group">
+        <button type="submit" class="btn-enviar" value="registrarEmprendimiento" >Enviar solicitud de registro</button>
       </div>
     </form>
   </div>
